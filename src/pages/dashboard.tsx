@@ -1,6 +1,6 @@
 import { For } from "solid-js";
 import { Bar, Line } from "solid-chartjs";
-import DashboardLayout from "../components/layout/dashboardLayout";
+import { MetaWrapper } from "../wrappers/metaWrapper";
 import StatCard from "../components/ui/statCard";
 import WelcomeCard from "../components/widgets/welcomeCard";
 import RocketCard from "../components/widgets/rocketCard";
@@ -13,20 +13,15 @@ import {
   chartDataSales,
   chartOptionsSales,
 } from "../types/data";
-
 import { IoPerson, IoRocket, IoCart, IoDocumentText } from "solid-icons/io";
-import { useMeta } from "../hooks/useMeta";
 
 const Dashboard = () => {
-  useMeta({
-    title: "Dashboard Overview | Solid-Tuts",
-    description:
-      "View your analytics, sales data, and active users in real-time.",
-    ogImage: "https://yourdomain.com/dashboard-og.png",
-  });
-
   return (
-    <DashboardLayout>
+    <MetaWrapper
+      title="Dashboard"
+      description="View your analytics, sales data, and active users in real-time."
+      ogImage="https://yourdomain.com/dashboard-og.png"
+    >
       {/* Stats Grid */}
       <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6 mb-8">
         <For each={statsData}>{(stat) => <StatCard {...stat} />}</For>
@@ -34,9 +29,9 @@ const Dashboard = () => {
 
       {/* Main Content Grid */}
       <div class="grid grid-cols-1 xl:grid-cols-3 gap-8 mb-8">
-        {/* Left Column (2/3 width) */}
+        {/* Left Column */}
         <div class="xl:col-span-2 space-y-8">
-          {/* Top Row: Welcome & Brand */}
+          {/* Top Row */}
           <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
             <WelcomeCard />
             <div class="bg-gradient-to-br from-teal-400 to-teal-300 rounded-3xl shadow-lg p-8 flex items-center justify-center relative overflow-hidden">
@@ -90,7 +85,7 @@ const Dashboard = () => {
           </div>
         </div>
 
-        {/* Right Column (1/3 width) */}
+        {/* Right Column */}
         <div class="space-y-8">
           <RocketCard />
 
@@ -116,7 +111,7 @@ const Dashboard = () => {
           <OrdersOverview />
         </div>
       </div>
-    </DashboardLayout>
+    </MetaWrapper>
   );
 };
 

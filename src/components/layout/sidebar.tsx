@@ -1,4 +1,5 @@
-import { createSignal, For } from "solid-js";
+import { createSignal, For, Show } from "solid-js";
+import { A, useLocation } from "@solidjs/router";
 import {
   IoHome,
   IoStatsChart,
@@ -13,38 +14,50 @@ import {
 interface NavItem {
   icon: any;
   label: string;
+  href: string;
   isHeader?: boolean;
 }
 
 const Sidebar = () => {
-  const [active, setActive] = createSignal("Dashboard");
+  const location = useLocation();
+
+  const isActive = (href: string) => {
+    // Exact match for root, startsWith for others
+    if (href === "/") {
+      return location.pathname === "/";
+    }
+    return location.pathname.startsWith(href);
+  };
 
   const mainNav: NavItem[] = [
-    { icon: IoHome, label: "Dashboard" },
-    { icon: IoStatsChart, label: "Tables" },
-    { icon: IoWallet, label: "Billing" },
-    { icon: IoRocket, label: "RTL" },
+    { icon: IoHome, label: "Dashboard", href: "/" },
+    { icon: IoStatsChart, label: "Tables", href: "/tables" },
+    { icon: IoWallet, label: "Billing", href: "/billing" },
   ];
 
   const accountNav: NavItem[] = [
-    { icon: IoPerson, label: "Profile" },
-    { icon: IoLogIn, label: "Sign In" },
-    { icon: IoPersonAdd, label: "Sign Up" },
+    { icon: IoPerson, label: "Profile", href: "/profile" },
+    { icon: IoLogIn, label: "Sign In", href: "/signin" },
+    { icon: IoPersonAdd, label: "Sign Up", href: "/signup" },
   ];
 
-  const NavLink = (props: NavItem) => (
-    <button
-      onClick={() => setActive(props.label)}
-      class={`w-full flex items-center gap-3 px-4 py-3 rounded-xl cursor-pointer transition-all ${
-        active() === props.label
-          ? "bg-white text-gray-800 shadow-sm font-semibold scale-[1.02]"
-          : "text-gray-500 hover:text-gray-700 hover:bg-white/50"
-      }`}
-    >
-      <props.icon class="text-lg" />
-      <span class="text-sm">{props.label}</span>
-    </button>
-  );
+  const NavLink = (props: NavItem) => {
+    const active = () => isActive(props.href);
+
+    return (
+      <A
+        href={props.href}
+        class={`flex items-center gap-3 px-4 py-3 rounded-xl cursor-pointer transition-all ${
+          active()
+            ? "bg-white text-gray-800 shadow-sm font-semibold scale-[1.02]"
+            : "text-gray-500 hover:text-gray-700 hover:bg-white/50"
+        }`}
+      >
+        <props.icon class="text-lg" />
+        <span class="text-sm">{props.label}</span>
+      </A>
+    );
+  };
 
   return (
     <aside class="fixed left-0 top-0 h-screen w-64 bg-[#F7FAFC] border-r border-gray-200 p-6 hidden lg:flex flex-col z-50">

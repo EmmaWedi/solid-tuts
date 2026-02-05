@@ -4,13 +4,17 @@ import { useMeta } from "../hooks/useMeta";
 interface MetaWrapperProps {
   title: string;
   description?: string;
+  ogImage?: string;
+  noIndex?: boolean;
   children: JSX.Element;
 }
 
 export const MetaWrapper = (props: MetaWrapperProps) => {
   useMeta({
-    title: `${props.title}`,
+    title: `${props.title} | Solid Tuts`,
     description: props.description,
+    ogImage: props.ogImage,
+    noIndex: props.noIndex,
   });
 
   return props.children;

@@ -15,7 +15,10 @@ const DashboardLayout = (props: DashboardLayoutProps) => {
         <Header />
         <main class="flex-1">{props.children}</main>
         <footer class="mt-12 text-center text-sm text-gray-400 pb-4">
-          <p>&copy; 2026 Purity UI Dashboard. Made with SolidJS & Tailwind.</p>
+          <p>
+            &copy; {new Date().getFullYear()} Purity UI Dashboard. Made with
+            SolidJS & Tailwind.
+          </p>
         </footer>
       </div>
     </div>

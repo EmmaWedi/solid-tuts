@@ -1,6 +1,6 @@
 import { createEffect } from "solid-js";
 
-interface MetaOptions {
+export interface MetaOptions {
   title?: string;
   description?: string;
   ogImage?: string;
@@ -14,11 +14,15 @@ export const useMeta = (options: MetaOptions) => {
       document.title = options.title;
     }
 
-    // Update or create meta description
+    // Update meta description
     updateMetaTag("name", "description", options.description);
 
     // Update Open Graph tags
-    updateMetaTag("property", "og:title", options.title);
+    updateMetaTag(
+      "property",
+      "og:title",
+      options.title?.replace(" | Solid Tuts", ""),
+    );
     updateMetaTag("property", "og:description", options.description);
     updateMetaTag("property", "og:image", options.ogImage);
 
@@ -31,7 +35,6 @@ export const useMeta = (options: MetaOptions) => {
   });
 };
 
-// Helper to update or create meta tags
 function updateMetaTag(attr: string, key: string, content?: string) {
   if (!content) return;
 

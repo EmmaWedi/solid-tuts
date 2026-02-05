@@ -1,14 +1,17 @@
 import { IoSettings, IoNotifications, IoPerson } from "solid-icons/io";
+import { usePageTitle } from "../../hooks/usePageTitle";
 
 const Header = () => {
+  const { rawPageName, readablePageName } = usePageTitle();
+
   return (
     <header class="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4">
       <div>
         <p class="text-gray-500 text-sm mb-1">
-          Pages / <span class="text-gray-800 font-medium">Dashboard</span>
+          Pages / <span class="text-gray-800 font-medium">{rawPageName()}</span>
         </p>
         <h2 class="text-3xl font-bold text-gray-800 tracking-tight">
-          Dashboard
+          {readablePageName()}
         </h2>
       </div>
 
