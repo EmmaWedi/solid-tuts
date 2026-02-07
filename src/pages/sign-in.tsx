@@ -6,13 +6,16 @@ import {
   IoLogoGoogle,
   IoLogoApple,
 } from "solid-icons/io";
-import { login } from "../stores/authStore";
+import { ImSpinner2 } from "solid-icons/im";
+import { setLoading, login, authState } from "../stores/authStore";
 
 const SignIn = () => {
   const navigate = useNavigate();
 
   const handleLogin = () => {
+    setLoading(true);
     login({ id: 1, name: "John", email: "john@example.com", role: "admin" });
+    setLoading(false);
     navigate("/");
   };
 
@@ -76,9 +79,17 @@ const SignIn = () => {
             <button
               onClick={handleLogin}
               type="submit"
-              class="w-full bg-teal-500 text-white py-3 rounded-xl font-bold hover:bg-teal-600 transition shadow-lg shadow-teal-200"
+              disabled={authState.isLoading}
+              class="w-full bg-teal-500 text-white py-3 rounded-xl font-bold hover:bg-teal-600 transition shadow-lg shadow-teal-200 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:bg-teal-500 flex items-center justify-center gap-2"
             >
-              SIGN IN
+              {authState.isLoading ? (
+                <>
+                  <ImSpinner2 class="animate-spin" size={20} />
+                  SIGNING IN...
+                </>
+              ) : (
+                "SIGN IN"
+              )}
             </button>
           </form>
 

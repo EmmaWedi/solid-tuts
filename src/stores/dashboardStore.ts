@@ -1,5 +1,6 @@
 import { createStore, produce } from "solid-js/store";
 import { createEffect } from "solid-js";
+import { storage } from "./storage";
 
 interface DashboardState {
   sidebarCollapsed: boolean;
@@ -16,17 +17,14 @@ const [dashboardState, setDashboardState] = createStore<DashboardState>({
 
 // Persist theme preference
 createEffect(() => {
-  localStorage.setItem("theme", dashboardState.theme);
-  localStorage.setItem(
-    "sidebarCollapsed",
-    String(dashboardState.sidebarCollapsed),
-  );
+  storage.set("theme", dashboardState.theme);
+  storage.set("sidebarCollapsed", String(dashboardState.sidebarCollapsed));
 });
 
 // Init from storage
 const initDashboard = () => {
-  const savedTheme = localStorage.getItem("theme") as "light" | "dark" | null;
-  const savedSidebar = localStorage.getItem("sidebarCollapsed");
+  const savedTheme = storage.get("theme") as "light" | "dark" | null;
+  const savedSidebar = storage.get("sidebarCollapsed");
 
   if (savedTheme) {
     setDashboardState("theme", savedTheme);

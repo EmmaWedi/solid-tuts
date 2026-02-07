@@ -1,5 +1,6 @@
-import { IoSettings, IoNotifications, IoPerson } from "solid-icons/io";
+import { IoSettings, IoNotifications, IoLogOut } from "solid-icons/io";
 import { usePageTitle } from "../../hooks/usePageTitle";
+import { logout } from "../../stores/authStore";
 
 const Header = () => {
   const { rawPageName, readablePageName } = usePageTitle();
@@ -40,8 +41,11 @@ const Header = () => {
           </span>
         </div>
 
-        <button class="flex items-center gap-2 text-gray-500 hover:text-teal-500 transition-colors text-sm font-bold px-3 py-2">
-          <IoPerson size={18} /> Sign In
+        <button
+          onClick={logout}
+          class="flex items-center gap-2 text-gray-500 hover:text-teal-500 transition-colors text-sm font-bold px-3 py-2"
+        >
+          <IoLogOut size={18} /> Sign Out
         </button>
 
         <div class="h-6 w-px bg-gray-200 mx-1"></div>

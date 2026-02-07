@@ -1,13 +1,10 @@
-import { createSignal, For, Show } from "solid-js";
+import { For } from "solid-js";
 import { A, useLocation } from "@solidjs/router";
 import {
   IoHome,
   IoStatsChart,
   IoWallet,
-  IoRocket,
   IoPerson,
-  IoLogIn,
-  IoPersonAdd,
   IoHelpCircle,
 } from "solid-icons/io";
 import { dashboardState, toggleSidebar } from "../../stores/dashboardStore";
@@ -38,8 +35,6 @@ const Sidebar = () => {
 
   const accountNav: NavItem[] = [
     { icon: IoPerson, label: "Profile", href: "/profile" },
-    { icon: IoLogIn, label: "Sign In", href: "/signin" },
-    { icon: IoPersonAdd, label: "Sign Up", href: "/signup" },
   ];
 
   const NavLink = (props: NavItem) => {

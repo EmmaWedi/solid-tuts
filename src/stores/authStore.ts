@@ -1,5 +1,6 @@
 import { createStore, produce } from "solid-js/store";
 import { createEffect } from "solid-js";
+import { storage } from "./storage";
 
 interface User {
   id: number;
@@ -26,22 +27,22 @@ createEffect(() => {
   if (authState.isLoading) return;
 
   if (authState.user) {
-    localStorage.setItem("user", JSON.stringify(authState.user));
-    localStorage.setItem("isAuthenticated", "true");
+    storage.setJSON("user", authState.user);
+    storage.set("isAuthenticated", "true");
   } else {
-    localStorage.removeItem("user");
-    localStorage.removeItem("isAuthenticated");
+    storage.remove("user");
+    storage.remove("isAuthenticated");
   }
 });
 
 // Init from storage
 const initAuth = () => {
-  const storedUser = localStorage.getItem("user");
-  const storedAuth = localStorage.getItem("isAuthenticated");
+  const storedUser = storage.getJSON("user");
+  const storedAuth = storage.get("isAuthenticated");
 
   if (storedUser && storedAuth) {
     setAuthState({
-      user: JSON.parse(storedUser),
+      user: storedUser as User,
       isAuthenticated: true,
       isLoading: false,
     });
