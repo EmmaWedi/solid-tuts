@@ -14,6 +14,7 @@ import {
   chartOptionsSales,
 } from "../types/data";
 import { IoPerson, IoRocket, IoCart, IoDocumentText } from "solid-icons/io";
+import { authState, logout } from "../stores/authStore";
 
 const Dashboard = () => {
   return (

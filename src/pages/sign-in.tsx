@@ -1,13 +1,21 @@
 import { MetaWrapper } from "../wrappers/metaWrapper";
-import { A } from "@solidjs/router";
+import { A, useNavigate } from "@solidjs/router";
 import {
   IoMail,
   IoLockClosed,
   IoLogoGoogle,
   IoLogoApple,
 } from "solid-icons/io";
+import { login } from "../stores/authStore";
 
 const SignIn = () => {
+  const navigate = useNavigate();
+
+  const handleLogin = () => {
+    login({ id: 1, name: "John", email: "john@example.com", role: "admin" });
+    navigate("/");
+  };
+
   return (
     <MetaWrapper
       title="Sign In"
@@ -66,6 +74,7 @@ const SignIn = () => {
             </div>
 
             <button
+              onClick={handleLogin}
               type="submit"
               class="w-full bg-teal-500 text-white py-3 rounded-xl font-bold hover:bg-teal-600 transition shadow-lg shadow-teal-200"
             >

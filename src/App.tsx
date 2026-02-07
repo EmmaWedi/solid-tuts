@@ -1,5 +1,6 @@
 import type { Component } from "solid-js";
 import { Router, Route } from "@solidjs/router";
+import { onMount } from "solid-js";
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -12,10 +13,10 @@ import {
   Legend,
 } from "chart.js";
 
-// Layout
-import DashboardLayout from "./components/layout/dashboardLayout";
+import { initAuth } from "./stores/authStore";
+import ProtectedRoute from "./components/auth/protected";
+import PublicRoute from "./components/auth/public";
 
-// Pages
 import Dashboard from "./pages/dashboard";
 import Tables from "./components/widgets/tables";
 import Billing from "./pages/billing";
@@ -24,7 +25,6 @@ import SignIn from "./pages/sign-in";
 import SignUp from "./pages/sign-up";
 import NotFound from "./pages/NotFound";
 
-// Register Chart.js
 ChartJS.register(
   CategoryScale,
   LinearScale,
@@ -36,25 +36,38 @@ ChartJS.register(
   Legend,
 );
 
-// Wrapper component to inject layout
-const LayoutWrapper = (Component: Component) => {
-  return () => (
-    <DashboardLayout>
-      <Component />
-    </DashboardLayout>
-  );
-};
-
 const App: Component = () => {
+  onMount(initAuth);
+
   return (
     <Router>
-      <Route path="/" component={LayoutWrapper(Dashboard)} />
-      <Route path="/tables" component={LayoutWrapper(Tables)} />
-      <Route path="/billing" component={LayoutWrapper(Billing)} />
-      <Route path="/profile" component={LayoutWrapper(Profile)} />
-      <Route path="/signin" component={SignIn} />
-      <Route path="/signup" component={SignUp} />
-      <Route path="*404" component={LayoutWrapper(NotFound)} />
+      <Route
+        path="/"
+        component={() => <ProtectedRoute component={Dashboard} />}
+      />
+      <Route
+        path="/tables"
+        component={() => <ProtectedRoute component={Tables} />}
+      />
+      <Route
+        path="/billing"
+        component={() => <ProtectedRoute component={Billing} />}
+      />
+      <Route
+        path="/profile"
+        component={() => <ProtectedRoute component={Profile} />}
+      />
+
+      <Route
+        path="/signin"
+        component={() => <PublicRoute component={SignIn} />}
+      />
+      <Route
+        path="/signup"
+        component={() => <PublicRoute component={SignUp} />}
+      />
+
+      <Route path="*404" component={NotFound} />
     </Router>
   );
 };

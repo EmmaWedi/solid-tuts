@@ -1,0 +1,85 @@
+import { createStore, produce } from "solid-js/store";
+import { createEffect } from "solid-js";
+
+interface User {
+  id: number;
+  name: string;
+  email: string;
+  role: string;
+}
+
+interface AuthState {
+  user: User | null;
+  isAuthenticated: boolean;
+  isLoading: boolean;
+}
+
+// Create reactive store
+const [authState, setAuthState] = createStore<AuthState>({
+  user: null,
+  isAuthenticated: false,
+  isLoading: true,
+});
+
+// Persist to localStorage
+createEffect(() => {
+  if (authState.isLoading) return;
+
+  if (authState.user) {
+    localStorage.setItem("user", JSON.stringify(authState.user));
+    localStorage.setItem("isAuthenticated", "true");
+  } else {
+    localStorage.removeItem("user");
+    localStorage.removeItem("isAuthenticated");
+  }
+});
+
+// Init from storage
+const initAuth = () => {
+  const storedUser = localStorage.getItem("user");
+  const storedAuth = localStorage.getItem("isAuthenticated");
+
+  if (storedUser && storedAuth) {
+    setAuthState({
+      user: JSON.parse(storedUser),
+      isAuthenticated: true,
+      isLoading: false,
+    });
+  } else {
+    setAuthState("isLoading", false);
+  }
+};
+
+// Actions
+const login = (user: User) => {
+  setAuthState({
+    user,
+    isAuthenticated: true,
+    isLoading: false,
+  });
+};
+
+const logout = () => {
+  setAuthState({
+    user: null,
+    isAuthenticated: false,
+    isLoading: false,
+  });
+};
+
+const updateUser = (updates: Partial<User>) => {
+  setAuthState(
+    produce((state) => {
+      if (state.user) {
+        Object.assign(state.user, updates);
+      }
+    }),
+  );
+};
+
+const setLoading = (loading: boolean) => {
+  setAuthState("isLoading", loading);
+};
+
+// Export readonly state and actions
+export { authState, initAuth, login, logout, updateUser, setLoading };

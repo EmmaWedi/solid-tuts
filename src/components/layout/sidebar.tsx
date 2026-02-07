@@ -10,6 +10,7 @@ import {
   IoPersonAdd,
   IoHelpCircle,
 } from "solid-icons/io";
+import { dashboardState, toggleSidebar } from "../../stores/dashboardStore";
 
 interface NavItem {
   icon: any;
