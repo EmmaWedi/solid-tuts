@@ -8,6 +8,7 @@ import {
   IoHelpCircle,
 } from "solid-icons/io";
 import { dashboardState, toggleSidebar } from "../../stores/dashboardStore";
+import { authState } from "../../stores/authStore";
 
 interface NavItem {
   icon: any;
@@ -61,7 +62,9 @@ const Sidebar = () => {
         <div class="w-8 h-8 bg-teal-400 rounded-lg flex items-center justify-center text-white font-bold shadow-md">
           P
         </div>
-        <h1 class="font-bold text-gray-800 tracking-wide text-lg">PURITY UI</h1>
+        <h1 class="font-bold text-gray-800 tracking-wide text-lg">
+          {authState.user?.name}
+        </h1>
       </div>
 
       <div class="flex-1 overflow-y-auto space-y-1">

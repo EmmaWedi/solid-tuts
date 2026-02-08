@@ -1,6 +1,6 @@
 import { createStore, produce } from "solid-js/store";
 import { createEffect } from "solid-js";
-import { storage } from "./storage";
+import { storage, secureStorage } from "./storage";
 
 interface User {
   id: number;
@@ -27,8 +27,8 @@ createEffect(() => {
   if (authState.isLoading) return;
 
   if (authState.user) {
-    storage.setJSON("user", authState.user);
-    storage.set("isAuthenticated", "true");
+    secureStorage.set("user", authState.user);
+    secureStorage.set("isAuthenticated", "true");
   } else {
     storage.remove("user");
     storage.remove("isAuthenticated");
