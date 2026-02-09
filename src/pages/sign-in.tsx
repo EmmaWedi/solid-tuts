@@ -7,16 +7,34 @@ import {
   IoLogoApple,
 } from "solid-icons/io";
 import { ImSpinner2 } from "solid-icons/im";
-import { setLoading, login, authState } from "../stores/authStore";
+import { authState } from "../stores/authStore";
+import { loginUser } from "../services/authService";
+import { createSignal } from "solid-js";
+interface LoginFormData {
+  email: string;
+  password: string;
+}
 
 const SignIn = () => {
   const navigate = useNavigate();
 
-  const handleLogin = () => {
-    setLoading(true);
-    login({ id: 1, name: "John", email: "john@example.com", role: "admin" });
-    setLoading(false);
-    navigate("/");
+  const [formData, setFormData] = createSignal<LoginFormData>({
+    email: "",
+    password: "",
+  });
+
+  // await loginUser(formData());
+  // or await loginUser({ email: formData().email, password: formData().password });
+
+  const handleLogin = async () => {
+    const result = await loginUser({
+      email: "john@example.com",
+      password: "password123",
+    });
+
+    if (result) {
+      navigate("/");
+    }
   };
 
   return (
@@ -29,6 +47,11 @@ const SignIn = () => {
         <div class="bg-white rounded-3xl shadow-xl border border-gray-100 p-8 w-full max-w-md">
           <div class="text-center mb-8">
             <h2 class="text-2xl font-bold text-gray-800 mb-2">Welcome Back</h2>
+            {authState.error && (
+              <div class="bg-red-100 text-red-700 p-3 rounded-lg">
+                {authState.error}
+              </div>
+            )}
             <p class="text-gray-500 text-sm">
               Enter your email and password to sign in
             </p>
@@ -44,6 +67,8 @@ const SignIn = () => {
                 <input
                   type="email"
                   placeholder="mail@example.com"
+                  value={formData().email}
+                  onInput={(e) => setFormData({ ...formData(), email: e.currentTarget.value })}
                   class="w-full pl-10 pr-4 py-2.5 border border-gray-200 rounded-xl focus:outline-none focus:border-teal-400 focus:ring-2 focus:ring-teal-50"
                 />
               </div>
@@ -58,6 +83,8 @@ const SignIn = () => {
                 <input
                   type="password"
                   placeholder="********"
+                  value={formData().password}
+                  onInput={(e) => setFormData({ ...formData(), password: e.currentTarget.value })}
                   class="w-full pl-10 pr-4 py-2.5 border border-gray-200 rounded-xl focus:outline-none focus:border-teal-400 focus:ring-2 focus:ring-teal-50"
                 />
               </div>

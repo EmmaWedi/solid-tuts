@@ -13,6 +13,8 @@ interface AuthState {
   user: User | null;
   isAuthenticated: boolean;
   isLoading: boolean;
+  error: string | null;
+  token: string | null;
 }
 
 // Create reactive store
@@ -20,18 +22,24 @@ const [authState, setAuthState] = createStore<AuthState>({
   user: null,
   isAuthenticated: false,
   isLoading: true,
+  error: null,
+  token: null,
 });
 
 // Persist to localStorage
 createEffect(() => {
-  if (authState.isLoading) return;
+  const { isLoading, user, isAuthenticated, token } = authState;
+  
+  if (isLoading) return;
 
-  if (authState.user) {
-    secureStorage.set("user", authState.user);
-    secureStorage.set("isAuthenticated", "true");
+  if (user) {
+    secureStorage.set("user", user);
+    secureStorage.set("isAuthenticated", isAuthenticated);
+    secureStorage.set("token", token);
   } else {
     storage.remove("user");
     storage.remove("isAuthenticated");
+    storage.remove("token");
   }
 });
 
@@ -39,11 +47,13 @@ createEffect(() => {
 const initAuth = () => {
   const storedUser = storage.getJSON("user");
   const storedAuth = storage.get("isAuthenticated");
+  const storedToken = storage.get("token");
 
   if (storedUser && storedAuth) {
     setAuthState({
       user: storedUser as User,
       isAuthenticated: true,
+      token: storedToken,
       isLoading: false,
     });
   } else {
@@ -51,12 +61,12 @@ const initAuth = () => {
   }
 };
 
-// Actions
-const login = (user: User) => {
+const setUser = (user: User) => {
   setAuthState({
     user,
     isAuthenticated: true,
     isLoading: false,
+    error: null,
   });
 };
 
@@ -65,7 +75,10 @@ const logout = () => {
     user: null,
     isAuthenticated: false,
     isLoading: false,
+    error: null,
   });
+  storage.remove("user");
+  storage.remove("isAuthenticated");
 };
 
 const updateUser = (updates: Partial<User>) => {
@@ -82,5 +95,13 @@ const setLoading = (loading: boolean) => {
   setAuthState("isLoading", loading);
 };
 
+const setError = (error: string | null) => {
+  setAuthState("error", error);
+};
+
+const setToken = (token: string | null) => {
+  setAuthState("token", token);
+}
+
 // Export readonly state and actions
-export { authState, initAuth, login, logout, updateUser, setLoading };
+export { authState, initAuth, setUser, logout, updateUser, setLoading, setError, setToken };
